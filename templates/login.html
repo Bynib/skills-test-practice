@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="w-screen h-screen flex flex-col justify-center items-center bg-gray-800 text-gray-300">
+        {%with messages = get_flashed_messages() %}
+            {%if messages%}
+                {% for message in messages%}
+                    <div class="text-white w-1/4 flex flex-col justify-center items-center h-[50px] bg-red-600 rounded-2xl mb-5"> <p>{{message}}</p></div>
+                {%endfor%}
+            {%endif%}
+        {%endwith%}
+        <div class="w-1/4 h-2/5 bg-gray-900 flex flex-col justify-center items-center rounded-3xl">
+            <p class="text-3xl">LOGIN</p>
+            <form action="/login" method="POST"class=" h-2/3 w-9/10 flex flex-col justify-center gap-10">
+                <div>
+
+                    <label for="username">USERNAME</label>
+                    <input type="text" name="username" value="{{username}}"  class="bg-white text-black focus:outline-none w-full h-[50px] px-2 rounded required"/>
+                </div>
+                <div>
+
+                    <label for="password">PASSWORD</label>
+                    <input type="password" name="password" value="{{password}}"  class="bg-white text-black focus:outline-none w-full h-[50px] px-2 rounded required"/>
+                </div>
+                <button type="submit" class="bg-blue-400 cursor-pointer py-3 px-5 w-1/2 self-end">LOGIN</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
