@@ -30,7 +30,7 @@ def get_all_users():
 
 def get_one_user(user_id):
     with connect_to_db() as conn:
-        user = conn.execute('SELECT * FROM user WHERE user_id = ?', (user_id)).fetchone()
+        user = conn.execute('SELECT * FROM user WHERE user_id = ?', (user_id,)).fetchone()
         user = dict(user)
         return user
     
@@ -42,13 +42,13 @@ def get_all_events():
 
 def get_one_event(event_id):
     with connect_to_db() as conn:
-        event = conn.execute('SELECT * FROM event WHERE event_id = ?', (event_id)).fetchone()
+        event = conn.execute('SELECT * FROM event WHERE event_id = ?', (event_id,)).fetchone()
         event = dict(event)
         return event
 
 def get_all_user_events(user_id):
     with connect_to_db() as conn:
-        user_events = conn.execute('SELECT * from event e JOIN user_event ue ON e.event_id = ue.event_id WHERE user_id = ?', (user_id)).fetchall()
+        user_events = conn.execute('SELECT * from event e JOIN user_event ue ON e.event_id = ue.event_id WHERE user_id = ?', (user_id,)).fetchall()
         user_events = [dict(user_event) for user_event in user_events]
         return user_events
 
@@ -83,14 +83,33 @@ def login(username, password):
     with connect_to_db() as conn:
         user = conn.execute('SELECT * FROM user WHERE username = ? AND password = ?', (username, password)).fetchone()
         return user
+    
+def search(search_query):
+    with connect_to_db() as conn:
+        search_query = f"%{search_query.lower()}%"
+        users = conn.execute('''
+                             SELECT * FROM user 
+                             WHERE LOWER(firstname || ' ' || lastname) LIKE ?
+                             ''', (search_query,)).fetchall()
+        users = [dict(user) for user in users]
+        return users
             
+def update_user(user_id, firstname, lastname, email, username, password):
+    with connect_to_db() as conn:
+        conn.execute('UPDATE user SET firstname = ?, lastname = ?, email = ?, username = ?, password = ? WHERE user_id = ?', (firstname, lastname, email, username, password, user_id))
+        conn.commit()
+
 def delete_user(user_id):
     with connect_to_db() as conn:
-        conn.execute('DELETE FROM user WHERE user_id = ?', (user_id))
+        conn.execute('DELETE FROM user WHERE user_id = ?', (user_id,))
         conn.commit()
 
 if __name__ == "__main__":
     print(get_all_users())
+    # print(search("ja"))
+    # print(get_one_user("4"))
+    # update_user("3","Christina", "Diamante", "christinadiamante113@gmail.com","bynib", "123")
+    # print(get_one_user("3"))
     # delete_user("2")
     # print(login("bynib", "123"))
     # pass

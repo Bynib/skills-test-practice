@@ -7,6 +7,65 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
 </head>
 <body>
-    
+    <div  class="w-screen h-screen flex flex-col justify-center items-center bg-gray-800 text-gray-300">
+        <div class="w-full h-[60px] bg-gray-900 fixed top-0 flex flex-row justify-between items-center">
+            <p>Welcome,
+                {%if user['isAdmin']%}
+                    Admin!
+                {%else%}
+                    {{user['firstname']}} {{user['lastname']}}!
+                {%endif%}
+            </p>
+            <form action="/logout">
+                <button type="submit" class=" bg-red-500 p-3 rounded-2xl">LOGOUT</button>
+            </form>
+        </div>
+        {%with messages = get_flashed_messages() %}
+            {%if messages%}
+                {% for message in messages%}
+                    {%if message == "User update successful!"%}
+                        <div class="text-white w-1/4 flex flex-col justify-center items-center h-[50px] bg-green-600 rounded-2xl mb-5"> <p>{{message}}</p></div>
+                    {%else%}
+                        <div class="text-white w-1/4 flex flex-col justify-center items-center h-[50px] bg-red-600 rounded-2xl mb-5"> <p>{{message}}</p></div>
+                    {%endif%}
+                {%endfor%}
+            {%endif%}
+        {%endwith%}
+        {%if user['isAdmin']%}
+            <form action="/search" method="POST">
+                <input type="text" name="search_query" value="{{search_query}}" placeholder="Search" class="focus:outline-none border-1 border-black w-[200px] h-[30px]">
+                <button type="submit" class="bg-blue-400 p-3">Find</button>
+            </form>
+            {% if request.path == "/search" %}
+            <form action="/dashboard">
+                <button type="submit" class="underline">Clear Search</button>
+            </form>
+            {%endif%}
+            <table class="text-xl">
+                <thead>
+                    <tr class="text-center">
+                        <td class="w-1/2">Name</td>
+                        <td>Email</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for registered_user in registered_users%}   
+                        <tr>
+                            <td>{{registered_user['firstname']}} {{registered_user['lastname']}}</td>
+                            <td>{{registered_user['email']}}</td>
+                            <td>
+                                <form action="/update">
+                                    <input type="hidden" name="user_id" value="{{registered_user['user_id']}}">
+                                    <button type="submit" class="bg-blue-400 rounded-xl p-3">Update</button>
+                                </form>
+                                
+                            </td>
+                        </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        {%endif%}
+    </div>
 </body>
 </html>

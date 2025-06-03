@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="w-screen h-screen flex flex-col justify-center items-center bg-gray-800 text-gray-300">
+        {%with messages = get_flashed_messages() %}
+            {%if messages%}
+                {% for message in messages%}
+                    <div class="text-white w-1/4 flex flex-col justify-center items-center h-[50px] bg-red-600 rounded-2xl mb-5"> <p>{{message}}</p></div>
+                {%endfor%}
+            {%endif%}
+        {%endwith%}
+        <div class="w-1/4 h-4/5 bg-gray-900 flex flex-col justify-center items-center rounded-3xl gap-10">
+            <form action="/update" method="POST">
+                <input type="hidden" name="user_id" value="{{user_id}}">
+                <input type="text" name="firstname" value="{{firstname}}">
+                <input type="text" name="lastname" value="{{lastname}}">
+                <input type="text" name="email" value="{{email}}">
+                <input type="text" name="username" value="{{username}}">
+                <input type="password" name="password" value="{{password}}">
+                <button type="submit" class="bg-blue-400 p-3 rounded-2xl">Update</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
