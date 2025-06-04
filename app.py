@@ -80,12 +80,12 @@ def search():
         users = db.search(search_query)
         return render_template('dashboard.html', registered_users=users, user=user, search_query=search_query)
 
-@app.route('/update-user', methods=["GET", "POST"])
-def update_user():
-    if request.method=="POST":
-        user_id = request.form['user_id']
-        user = db.get_one_user(user_id)
-        return render_template("update.html", user=user)
+# @app.route('/update-user', methods=["GET", "POST"])
+# def update_user():
+#     if request.method=="POST":
+#         user_id = request.form['user_id']
+#         user = db.get_one_user(user_id)
+#         return render_template("update.html", user=user)
 
 @app.route('/update',methods=["GET","POST"])
 def update():
@@ -127,7 +127,12 @@ def update():
     user = db.get_one_user(user_id)
     return render_template("update.html", user_id=user['user_id'], firstname=user['firstname'], lastname=user['lastname'], email=user['email'], username=user['username'], password=user['password'])
 
-
+@app.route('/delete-user', methods=["GET","POST"])
+def delete_user():
+    if request.method == "POST":
+        user_id =request.form['user_id']
+        db.delete_user(user_id)
+        return redirect(url_for('dashboard'))
 
     
 

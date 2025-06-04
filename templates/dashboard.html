@@ -54,10 +54,14 @@
                         <tr>
                             <td>{{registered_user['firstname']}} {{registered_user['lastname']}}</td>
                             <td>{{registered_user['email']}}</td>
-                            <td>
+                            <td class="flex">
                                 <form action="/update">
                                     <input type="hidden" name="user_id" value="{{registered_user['user_id']}}">
                                     <button type="submit" class="bg-blue-400 rounded-xl p-3">Update</button>
+                                </form>
+                                <form action="/delete-user" method="POST">
+                                    <input type="hidden" name="user_id" value="{{registered_user['user_id']}}">
+                                    <button type="button" onclick="confirmDelete(this)" class="bg-red-400 rounded-xl p-3">DELETE</button>
                                 </form>
                                 
                             </td>
@@ -69,3 +73,10 @@
     </div>
 </body>
 </html>
+<script>
+    function confirmDelete(button){
+        if(confirm("Delete this user?")){
+            button.closest('form').submit()
+        }
+    }
+</script>
